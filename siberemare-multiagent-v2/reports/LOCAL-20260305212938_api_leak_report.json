@@ -1,0 +1,465 @@
+{
+  "scan_id": "LOCAL-20260305212938",
+  "target": "local:/Users/emre/Desktop/Emare/Emaresiber",
+  "started_at": "2026-03-05T21:29:38.723462+00:00",
+  "finished_at": "2026-03-05T21:29:38.723467+00:00",
+  "total_findings": 28,
+  "critical_count": 7,
+  "high_count": 0,
+  "medium_count": 0,
+  "low_count": 21,
+  "sources_scanned": [
+    "local_file"
+  ],
+  "errors": [],
+  "credentials": [
+    {
+      "credential_type": "PostgreSQL Connection String",
+      "matched_value": "post*************************************test",
+      "raw_hash": "d7d985dc4dc241a1999e1a6e4097913bc0c29577dc4a430b99f8137f93359e7c",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/.env",
+      "context_snippet": "ue V*****************************************************************************************************************************************at |",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:29:38.662860+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/.env",
+        "size": 1223
+      }
+    },
+    {
+      "credential_type": "Redis Connection String",
+      "matched_value": "redi************************************************************************************************************************************************************************************************************************************************SEC\n",
+      "raw_hash": "0898d9d1ba77f08e43b3622d5a48b031a02d4609462620e7311ad36f13b9b6c1",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/.env",
+      "context_snippet": "ffla*************************************************************************************************************************************************************************************************************************************************************************************************=SEC",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:29:38.662909+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/.env",
+        "size": 1223
+      }
+    },
+    {
+      "credential_type": "MySQL Connection String",
+      "matched_value": "mysq*******************************)?\"",
+      "raw_hash": "a92b1972bde55cedde952b426ae05eb1607c841b61eae0279f74c2fb3a8a1188",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/tools/api_leak_scanner.py",
+      "context_snippet": "\"MyS*********************************************************************************************************************************ile(",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:29:38.680016+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/tools/api_leak_scanner.py",
+        "size": 35139
+      }
+    },
+    {
+      "credential_type": "Redis Connection String",
+      "matched_value": "redi*******************************)?\"",
+      "raw_hash": "1186f2c21773a8158e596242ecb4c5cb5bd39ce5f825bdab9136bafb6f3cdf79",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/tools/api_leak_scanner.py",
+      "context_snippet": "\"Red******************************************************************************************************************************** API",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:29:38.680068+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/tools/api_leak_scanner.py",
+        "size": 35139
+      }
+    },
+    {
+      "credential_type": "PGP Private Key",
+      "matched_value": "----*****************************----",
+      "raw_hash": "8a1ddaa7dab83b9a5ffe092bc3aad1df30c2e0be6246aee0a0da616d628d1da7",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/tools/api_leak_scanner.py",
+      "context_snippet": "E KE*********************************************************************************************************************************r\"\"\"",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:29:38.680232+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/tools/api_leak_scanner.py",
+        "size": 35139
+      }
+    },
+    {
+      "credential_type": "PostgreSQL Connection String",
+      "matched_value": "post***************************************st\")",
+      "raw_hash": "eaca475a13d9b5c0391ce5f30d5af5e1ec56b11b59f330fdd3deac35a6682439",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/config/graph_switch.py",
+      "context_snippet": "allb*******************************************************************************************************************************************://l",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:29:38.692741+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/config/graph_switch.py",
+        "size": 1126
+      }
+    },
+    {
+      "credential_type": "PostgreSQL Connection String",
+      "matched_value": "post*****************************************est\"",
+      "raw_hash": "9821b432c29113637d1667ecb71d38a675892560e69d347b8ddeee2839d931e5",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/k8s/deployment.yaml",
+      "context_snippet": "O4J_***********************************************************************************************************************************379\"",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:29:38.693762+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/k8s/deployment.yaml",
+        "size": 1807
+      }
+    },
+    {
+      "credential_type": "Cloudflare API Key",
+      "matched_value": "d7d9*****************************0c29",
+      "raw_hash": "ff6af186b14d3e7a6dac9dd41af6fc72822b81acb2c688dec4da4231b0f2b467",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "*************************************************************************************************************************************\"loc",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722219+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Cloudflare API Key",
+      "matched_value": "0898*****************************02d4",
+      "raw_hash": "3ef557eb9d40283c2db676d3a8535a928d988d68df0e2d95517d2bfae4ac17e1",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "*************************************************************************************************************************************\"loc",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722273+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Cloudflare API Key",
+      "matched_value": "a92b*****************************07c8",
+      "raw_hash": "69853d0c9afcc00f10ace7209d6436b60d233c94993a7efe1ce3fc4014d36b12",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "*************************************************************************************************************************************\"loc",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722317+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Cloudflare API Key",
+      "matched_value": "1186*****************************bd39",
+      "raw_hash": "77f25e5e34d0d77405bf473865c9570b6f6103fa057a232519abc46850a8fa37",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "*************************************************************************************************************************************\"loc",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722351+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Cloudflare API Key",
+      "matched_value": "8a1d*****************************0c2e",
+      "raw_hash": "1895eb7e93e3786447f0ac13c11b937ed62809baf8df4467c03c35f49b2b5e8d",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "*************************************************************************************************************************************\"loc",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722415+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Cloudflare API Key",
+      "matched_value": "eaca*****************************c56b",
+      "raw_hash": "db020207aee58eb9d9897450a71380e0ae427cc528ae7a41c08cc3993b27abf9",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "*************************************************************************************************************************************\"loc",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722462+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Cloudflare API Key",
+      "matched_value": "9821*****************************5892",
+      "raw_hash": "f9fe4aaead39763b0130bc6d7d0fceaf403b3a6395484edbd6f12ac227ed111f",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "*************************************************************************************************************************************\"loc",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722498+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "d7d9************************913b",
+      "raw_hash": "95c21d6a2b08a5c156a89f9eeb15bbe6d5a6b532e222be809b35874f3054acb5",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "********************************************************************************************************************************ce\":",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722689+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "c0c2************************9e7c",
+      "raw_hash": "53fdca36add7d0d52059f24331573493eec1eaad21220e44a3798a49ad8cf51d",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "\"raw***********************************************************************************************************************_url",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722703+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "0898************************b031",
+      "raw_hash": "14f4a115d0abb1d07e3d71ac9a786c4d2aef43a65b8d6d945bb6f236dcc88418",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "********************************************************************************************************************************ce\":",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722735+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "a02d************************b6c1",
+      "raw_hash": "b18907220c6cf24fc082c69eb9176a492a05c973ac02095452fd1f0ed6fdfba6",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "\"raw***********************************************************************************************************************_url",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722750+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "a92b************************5eb1",
+      "raw_hash": "ed6acb9325c75e49198879ba0f1c93ba6c13c4e3b4d30010268cbeb4296521be",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "********************************************************************************************************************************ce\":",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722780+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "607c************************1188",
+      "raw_hash": "7dfaf347a1299de84df502357df6678a96550607b48bf2b3f7789b01392b381d",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "\"raw***********************************************************************************************************************_url",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722792+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "1186************************c5cb",
+      "raw_hash": "401983b3cfe47df60ec9c84b170d0dee1cf3999c16f1a65943bdce4a6351825d",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "********************************************************************************************************************************ce\":",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722819+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "5bd3************************df79",
+      "raw_hash": "d55b4f716ea53cfeb242165297424c2068c166e7d7489baf99465b482f8c9f59",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "\"raw***********************************************************************************************************************_url",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722831+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "8a1d************************d1df",
+      "raw_hash": "8b239453eed5b2838a1b99c678b1c6727af71fd8dd2b0804b46b0a72a677eaa8",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "********************************************************************************************************************************ce\":",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722859+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "30c2************************1da7",
+      "raw_hash": "749b54b9709a1d9ac5ec421bdd69ac07a76e6e899c8a3790236bd324f1e49f7c",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "\"raw***********************************************************************************************************************_url",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722870+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "eaca************************f5e1",
+      "raw_hash": "999138ead62c7ee21bc350d30e167b303d3bc54406834bf82847cb09bdec6152",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "********************************************************************************************************************************ce\":",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722898+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "ec56************************2439",
+      "raw_hash": "c4ccf4c6ffb35c2ebf32c482c582a8c084f8c3feca13cb59588e3e12b12932e4",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "\"raw***********************************************************************************************************************_url",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722911+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "9821************************38a6",
+      "raw_hash": "52e4e8573b00eae6a9a7dd3ab1b01c0ecf60c0904d5d5a462bb787c4fee124f8",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "********************************************************************************************************************************ce\":",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722938+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    },
+    {
+      "credential_type": "Algolia API Key",
+      "matched_value": "7589************************31e5",
+      "raw_hash": "99c850dbe7571699d970cbf031b8f53285935ee252dbd85aca703e91c10192df",
+      "source": "local_file",
+      "source_url": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+      "context_snippet": "\"raw***********************************************************************************************************************_url",
+      "confidence": "LOW",
+      "severity": "LOW",
+      "found_at": "2026-03-05T21:29:38.722949+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json",
+        "size": 5582
+      }
+    }
+  ]
+}

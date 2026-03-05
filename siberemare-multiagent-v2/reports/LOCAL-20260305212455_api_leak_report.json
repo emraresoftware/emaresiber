@@ -1,0 +1,129 @@
+{
+  "scan_id": "LOCAL-20260305212455",
+  "target": "local:.",
+  "started_at": "2026-03-05T21:24:55.148855+00:00",
+  "finished_at": "2026-03-05T21:24:55.148860+00:00",
+  "total_findings": 7,
+  "critical_count": 7,
+  "high_count": 0,
+  "medium_count": 0,
+  "low_count": 0,
+  "sources_scanned": [
+    "local_file"
+  ],
+  "errors": [],
+  "credentials": [
+    {
+      "credential_type": "PostgreSQL Connection String",
+      "matched_value": "post*************************************test",
+      "raw_hash": "d7d985dc4dc241a1999e1a6e4097913bc0c29577dc4a430b99f8137f93359e7c",
+      "source": "local_file",
+      "source_url": ".env",
+      "context_snippet": "ue V*****************************************************************************************************************************************at |",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:24:55.080219+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": ".env",
+        "size": 1223
+      }
+    },
+    {
+      "credential_type": "Redis Connection String",
+      "matched_value": "redi************************************************************************************************************************************************************************************************************************************************SEC\n",
+      "raw_hash": "0898d9d1ba77f08e43b3622d5a48b031a02d4609462620e7311ad36f13b9b6c1",
+      "source": "local_file",
+      "source_url": ".env",
+      "context_snippet": "ffla*************************************************************************************************************************************************************************************************************************************************************************************************=SEC",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:24:55.080565+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": ".env",
+        "size": 1223
+      }
+    },
+    {
+      "credential_type": "MySQL Connection String",
+      "matched_value": "mysq*******************************)?\"",
+      "raw_hash": "a92b1972bde55cedde952b426ae05eb1607c841b61eae0279f74c2fb3a8a1188",
+      "source": "local_file",
+      "source_url": "tools/api_leak_scanner.py",
+      "context_snippet": "\"MyS*********************************************************************************************************************************ile(",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:24:55.104934+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "tools/api_leak_scanner.py",
+        "size": 35139
+      }
+    },
+    {
+      "credential_type": "Redis Connection String",
+      "matched_value": "redi*******************************)?\"",
+      "raw_hash": "1186f2c21773a8158e596242ecb4c5cb5bd39ce5f825bdab9136bafb6f3cdf79",
+      "source": "local_file",
+      "source_url": "tools/api_leak_scanner.py",
+      "context_snippet": "\"Red******************************************************************************************************************************** API",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:24:55.104995+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "tools/api_leak_scanner.py",
+        "size": 35139
+      }
+    },
+    {
+      "credential_type": "PGP Private Key",
+      "matched_value": "----*****************************----",
+      "raw_hash": "8a1ddaa7dab83b9a5ffe092bc3aad1df30c2e0be6246aee0a0da616d628d1da7",
+      "source": "local_file",
+      "source_url": "tools/api_leak_scanner.py",
+      "context_snippet": "E KE*********************************************************************************************************************************r\"\"\"",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:24:55.105145+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "tools/api_leak_scanner.py",
+        "size": 35139
+      }
+    },
+    {
+      "credential_type": "PostgreSQL Connection String",
+      "matched_value": "post***************************************st\")",
+      "raw_hash": "eaca475a13d9b5c0391ce5f30d5af5e1ec56b11b59f330fdd3deac35a6682439",
+      "source": "local_file",
+      "source_url": "config/graph_switch.py",
+      "context_snippet": "allb*******************************************************************************************************************************************://l",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:24:55.117698+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "config/graph_switch.py",
+        "size": 1126
+      }
+    },
+    {
+      "credential_type": "PostgreSQL Connection String",
+      "matched_value": "post*****************************************est\"",
+      "raw_hash": "9821b432c29113637d1667ecb71d38a675892560e69d347b8ddeee2839d931e5",
+      "source": "local_file",
+      "source_url": "k8s/deployment.yaml",
+      "context_snippet": "O4J_***********************************************************************************************************************************379\"",
+      "confidence": "HIGH",
+      "severity": "CRITICAL",
+      "found_at": "2026-03-05T21:24:55.118684+00:00",
+      "target_domain": "local",
+      "metadata": {
+        "file": "k8s/deployment.yaml",
+        "size": 1807
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: siberemare-multiagent
+  labels:
+    app: siberemare
+    version: v2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: siberemare
+  template:
+    metadata:
+      labels:
+        app: siberemare
+    spec:
+      containers:
+        - name: app
+          image: yourrepo/siberemare-multiagent:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: siberemare-config
+            - secretRef:
+                name: siberemare-secrets
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          volumeMounts:
+            - name: checkpoints
+              mountPath: /app/checkpoints
+            - name: reports
+              mountPath: /app/reports
+          livenessProbe:
+            exec:
+              command: ["python", "-c", "import graph; print('OK')"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+      volumes:
+        - name: checkpoints
+          persistentVolumeClaim:
+            claimName: siberemare-checkpoints-pvc
+        - name: reports
+          persistentVolumeClaim:
+            claimName: siberemare-reports-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: siberemare-multiagent-svc
+spec:
+  selector:
+    app: siberemare
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: siberemare-config
+data:
+  LLM_MODE: "cloud"
+  GRAPH_MODE: "neo4j_local"
+  NEO4J_URI: "bolt://neo4j-svc:7687"
+  PGVECTOR_URL: "postgresql://user:pass@postgres-svc:5432/pentest"
+  GRAPH_CACHE: "redis://redis-svc:6379"

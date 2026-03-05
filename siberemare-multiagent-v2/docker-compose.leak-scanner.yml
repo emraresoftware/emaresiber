@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  leak-scanner:
+    build: .
+    container_name: siberemare-leak-scanner
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./reports:/app/reports
+      - ./.env:/app/.env:ro
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/config"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'

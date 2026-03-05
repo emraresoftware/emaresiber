@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SiberEmare Attack-Path Visualizer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; }
+    #header {
+      background: #161b22;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #30363d;
+    }
+    #header h1 { font-size: 18px; color: #58a6ff; }
+    #request-input {
+      flex: 1;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: #e6edf3;
+      font-size: 14px;
+      max-width: 300px;
+    }
+    #load-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: #238636;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #load-btn:hover { background: #2ea043; }
+    #cy { width: 100vw; height: calc(100vh - 56px); }
+    #tooltip {
+      position: absolute;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      max-width: 280px;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+    }
+    #tooltip h3 { color: #58a6ff; margin-bottom: 6px; }
+    #tooltip .cvss { color: #f78166; font-weight: bold; }
+    #status { color: #8b949e; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <h1><i class="fa-solid fa-diagram-project"></i> SiberEmare Attack-Path Visualizer</h1>
+  <input id="request-input" type="text" placeholder="Request ID (ör: REQ-2026-TEST01)" value="REQ-2026-TEST01" />
+  <button id="load-btn" onclick="loadAttackPath()">Yükle</button>
+  <span id="status">Hazır</span>
+</div>
+
+<div id="cy"></div>
+<div id="tooltip"></div>
+
+<script>
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'background-color': '#1e88e5',
+        'label': 'data(label)',
+        'width': 50,
+        'height': 50,
+        'color': '#ffffff',
+        'font-size': '11px',
+        'text-valign': 'bottom',
+        'text-halign': 'center',
+        'text-margin-y': 6,
+        'text-outline-color': '#0d1117',
+        'text-outline-width': 2,
+      }
+    },
+    {
+      selector: '.critical',
+      style: { 'background-color': '#e53935', 'border-width': 4, 'border-color': '#ff5252' }
+    },
+    {
+      selector: '.high',
+      style: { 'background-color': '#fb8c00', 'border-color': '#ffcc02' }
+    },
+    {
+      selector: '.medium',
+      style: { 'background-color': '#fdd835' }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 3,
+        'line-color': '#30363d',
+        'target-arrow-color': '#58a6ff',
+        'target-arrow-shape': 'triangle',
+        'curve-style': 'bezier',
+        'label': 'data(label)',
+        'font-size': '10px',
+        'color': '#8b949e',
+      }
+    }
+  ],
+  layout: { name: 'cose', animate: true, padding: 40 }
+});
+
+async function loadAttackPath() {
+  const requestId = document.getElementById('request-input').value.trim();
+  const status = document.getElementById('status');
+  if (!requestId) return;
+
+  status.textContent = 'Yükleniyor...';
+
+  try {
+    const res = await fetch(`/api/graph/path/${requestId}`);
+    if (!res.ok) throw new Error(`API Hatası: ${res.status}`);
+    const data = await res.json();
+
+    cy.elements().remove();
+    if (data.elements) {
+      cy.add(data.elements.nodes || []);
+      cy.add(data.elements.edges || []);
+    }
+    cy.layout({ name: 'cose', animate: true }).run();
+    cy.fit(undefined, 40);
+    status.textContent = `${cy.nodes().length} node, ${cy.edges().length} edge yüklendi.`;
+  } catch (err) {
+    // Demo mode: generate sample graph
+    loadDemoGraph(requestId);
+    status.textContent = 'Demo mod (API bağlantısı yok)';
+  }
+}
+
+function loadDemoGraph(requestId) {
+  cy.elements().remove();
+  cy.add([
+    { data: { id: 'n1', label: 'IDOR\n/user/123', cvss: '8.1', severity: 'high', rootCause: 'Eksik yetki kontrolü' }, classes: 'high' },
+    { data: { id: 'n2', label: 'Privilege\nEscalation', cvss: '9.2', severity: 'critical', rootCause: 'RBAC bypass' }, classes: 'critical' },
+    { data: { id: 'n3', label: 'Data\nExfiltration', cvss: '9.8', severity: 'critical', rootCause: 'Şifresiz veri' }, classes: 'critical' },
+    { data: { id: 'n4', label: 'SQL Injection\n/api/search', cvss: '7.5', severity: 'high', rootCause: 'Parametresiz sorgu' }, classes: 'high' },
+    { data: { source: 'n1', target: 'n2', label: '0.85' } },
+    { data: { source: 'n2', target: 'n3', label: '0.92' } },
+    { data: { source: 'n4', target: 'n2', label: '0.78' } },
+  ]);
+  cy.layout({ name: 'cose', animate: true }).run();
+  cy.fit(undefined, 40);
+}
+
+// Tooltip on node click
+const tooltip = document.getElementById('tooltip');
+cy.on('tap', 'node', function(evt) {
+  const node = evt.target;
+  const data = node.data();
+  const pos = evt.renderedPosition || evt.position;
+  tooltip.innerHTML = `
+    <h3>${data.label || data.id}</h3>
+    <p><b>CVSS:</b> <span class="cvss">${data.cvss || 'N/A'}</span></p>
+    <p><b>Kök Neden:</b> ${data.rootCause || 'N/A'}</p>
+    <p><b>Severity:</b> ${data.severity || 'N/A'}</p>
+  `;
+  tooltip.style.display = 'block';
+  tooltip.style.left = (pos.x + 20) + 'px';
+  tooltip.style.top = (pos.y + 20) + 'px';
+});
+
+cy.on('tap', function(evt) {
+  if (evt.target === cy) tooltip.style.display = 'none';
+});
+
+// Auto-load on start
+window.addEventListener('load', loadAttackPath);
+
+// Live reload every 15 seconds
+setInterval(loadAttackPath, 15000);
+</script>
+</body>
+</html>

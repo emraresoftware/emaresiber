@@ -1,0 +1,17 @@
+{
+  "scan_id": "SCAN-emaresiber.com-20260305212928",
+  "target": "emaresiber.com",
+  "started_at": "2026-03-05T21:29:28.906711+00:00",
+  "finished_at": "2026-03-05T21:29:29.651812+00:00",
+  "total_findings": 0,
+  "critical_count": 0,
+  "high_count": 0,
+  "medium_count": 0,
+  "low_count": 0,
+  "sources_scanned": [
+    "urlscan",
+    "paste"
+  ],
+  "errors": [],
+  "credentials": []
+}

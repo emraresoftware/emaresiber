@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiberEmare API Sızıntı Raporu — local:/Users/emre/Desktop/Emare/Emaresiber</title>
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --card: #131a2b;
+            --accent: #00d4ff;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --success: #28a745;
+            --text: #e8e8e8;
+            --muted: #8892a0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+        header {
+            background: linear-gradient(135deg, #131a2b 0%, #1a2744 100%);
+            border-bottom: 2px solid var(--accent);
+            padding: 32px 0;
+            margin-bottom: 32px;
+        }
+        header h1 { font-size: 28px; color: var(--accent); }
+        header p { color: var(--muted); margin-top: 8px; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.06);
+            text-align: center;
+        }
+        .stat-card h3 { font-size: 36px; margin-bottom: 4px; }
+        .stat-card p { color: var(--muted); font-size: 14px; }
+        .critical { color: #dc3545; }
+        .high { color: #fd7e14; }
+        .medium { color: #ffc107; }
+        .low { color: #28a745; }
+        .risk-meter {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .risk-bar {
+            height: 24px;
+            background: #1e2a3a;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .risk-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 1s ease;
+            background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+        th {
+            background: #1a2744;
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 14px;
+        }
+        tr:hover { background: rgba(0, 212, 255, 0.03); }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        code {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .action-plan {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--accent);
+        }
+        .action-plan h4 { color: var(--accent); margin-bottom: 8px; }
+        .action-plan ol { padding-left: 20px; }
+        .action-plan li { margin-bottom: 6px; color: var(--muted); }
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 48px;
+        }
+        @media print {
+            body { background: #fff; color: #000; }
+            .stat-card, table, .risk-meter, .action-plan { border: 1px solid #ddd; }
+            .badge { border: 1px solid currentColor; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>🔒 SiberEmare API Sızıntı Tarama Raporu</h1>
+        <p>Hedef: <strong>local:/Users/emre/Desktop/Emare/Emaresiber</strong> | Tarama: LOCAL-20260305212938 | 2026-03-05T21:29:38.723462+00:00</p>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>28</h3>
+            <p>Toplam Bulgu</p>
+        </div>
+        <div class="stat-card">
+            <h3 class="critical">7</h3>
+            <p>Kritik</p>
+        </div>
+        <div class="stat-card">
+            <h3 class="high">0</h3>
+            <p>Yüksek</p>
+        </div>
+        <div class="stat-card">
+            <h3 class="medium">0</h3>
+            <p>Orta</p>
+        </div>
+        <div class="stat-card">
+            <h3 class="low">21</h3>
+            <p>Düşük</p>
+        </div>
+        <div class="stat-card">
+            <h3>1</h3>
+            <p>Kaynak Tarandı</p>
+        </div>
+    </div>
+
+    <div class="risk-meter">
+        <h3 class="section-title">Risk Değerlendirmesi</h3>
+        <p>Risk Skoru: <strong>32%</strong></p>
+        <div class="risk-bar">
+            <div class="risk-fill" style="width: 32%"></div>
+        </div>
+    </div>
+
+    <h2 class="section-title">🔍 Detaylı Bulgular (28)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Severity</th>
+                <th>Tip</th>
+                <th>Değer (Maskeli)</th>
+                <th>Kaynak</th>
+                <th>URL</th>
+                <th>Context</th>
+                <th>Remediation</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td>1</td>
+            <td><span class="badge" style="background:#dc3545">CRITICAL</span></td>
+            <td><strong>PostgreSQL Connection String</strong></td>
+            <td><code>post*************************************test</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/.env" target="_blank" rel="noopener">Link</a></td>
+            <td><small>ue V****************************************************************************...</small></td>
+            <td><small>• PostgreSQL kullanıcı şifresini değiştirin: ALTER USER ... PASSWORD ...<br>• pg_hba.conf ile erişimi kısıtlayın<br>• SSL bağlantıyı zorunlu kılın</small></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td><span class="badge" style="background:#dc3545">CRITICAL</span></td>
+            <td><strong>Redis Connection String</strong></td>
+            <td><code>redi************************************************************************************************************************************************************************************************************************************************SEC
+</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/.env" target="_blank" rel="noopener">Link</a></td>
+            <td><small>ffla****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td><span class="badge" style="background:#dc3545">CRITICAL</span></td>
+            <td><strong>MySQL Connection String</strong></td>
+            <td><code>mysq*******************************)?"</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/tools/api_leak_scanner.py" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"MyS****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td><span class="badge" style="background:#dc3545">CRITICAL</span></td>
+            <td><strong>Redis Connection String</strong></td>
+            <td><code>redi*******************************)?"</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/tools/api_leak_scanner.py" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"Red****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td><span class="badge" style="background:#dc3545">CRITICAL</span></td>
+            <td><strong>PGP Private Key</strong></td>
+            <td><code>----*****************************----</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/tools/api_leak_scanner.py" target="_blank" rel="noopener">Link</a></td>
+            <td><small>E KE****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td><span class="badge" style="background:#dc3545">CRITICAL</span></td>
+            <td><strong>PostgreSQL Connection String</strong></td>
+            <td><code>post***************************************st")</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/config/graph_switch.py" target="_blank" rel="noopener">Link</a></td>
+            <td><small>allb****************************************************************************...</small></td>
+            <td><small>• PostgreSQL kullanıcı şifresini değiştirin: ALTER USER ... PASSWORD ...<br>• pg_hba.conf ile erişimi kısıtlayın<br>• SSL bağlantıyı zorunlu kılın</small></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td><span class="badge" style="background:#dc3545">CRITICAL</span></td>
+            <td><strong>PostgreSQL Connection String</strong></td>
+            <td><code>post*****************************************est"</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/k8s/deployment.yaml" target="_blank" rel="noopener">Link</a></td>
+            <td><small>O4J_****************************************************************************...</small></td>
+            <td><small>• PostgreSQL kullanıcı şifresini değiştirin: ALTER USER ... PASSWORD ...<br>• pg_hba.conf ile erişimi kısıtlayın<br>• SSL bağlantıyı zorunlu kılın</small></td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Cloudflare API Key</strong></td>
+            <td><code>d7d9*****************************0c29</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Cloudflare API Key</strong></td>
+            <td><code>0898*****************************02d4</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Cloudflare API Key</strong></td>
+            <td><code>a92b*****************************07c8</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Cloudflare API Key</strong></td>
+            <td><code>1186*****************************bd39</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Cloudflare API Key</strong></td>
+            <td><code>8a1d*****************************0c2e</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>13</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Cloudflare API Key</strong></td>
+            <td><code>eaca*****************************c56b</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>14</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Cloudflare API Key</strong></td>
+            <td><code>9821*****************************5892</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>15</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>d7d9************************913b</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>16</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>c0c2************************9e7c</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"raw****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>17</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>0898************************b031</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>18</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>a02d************************b6c1</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"raw****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>19</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>a92b************************5eb1</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>20</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>607c************************1188</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"raw****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>21</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>1186************************c5cb</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>22</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>5bd3************************df79</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"raw****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>23</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>8a1d************************d1df</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>24</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>30c2************************1da7</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"raw****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>25</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>eaca************************f5e1</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>26</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>ec56************************2439</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"raw****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>27</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>9821************************38a6</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>********************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        <tr>
+            <td>28</td>
+            <td><span class="badge" style="background:#28a745">LOW</span></td>
+            <td><strong>Algolia API Key</strong></td>
+            <td><code>7589************************31e5</code></td>
+            <td>local_file</td>
+            <td><a href="siberemare-multiagent-v2/reports/LOCAL-20260305212455_api_leak_report.json" target="_blank" rel="noopener">Link</a></td>
+            <td><small>"raw****************************************************************************...</small></td>
+            <td><small>• İlgili credential'ı derhal iptal edin (revoke/rotate)<br>• Yetkisiz erişim loglarını kontrol edin<br>• Secret management çözümü kullanın (Vault, AWS SM, Azure KV)<br>• Koda gömülü secret'ları environment variable'lara taşıyın</small></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2 class="section-title">🛡️ Aksiyon Planı</h2>
+    <div class="action-plan">
+        <h4>Acil (0-4 saat)</h4>
+        <ol>
+            <li>Tüm CRITICAL seviye anahtarları derhal iptal edin (revoke/rotate)</li>
+            <li>İlgili servislerin erişim loglarını kontrol edin</li>
+            <li>Yetkisiz erişim olup olmadığını doğrulayın</li>
+        </ol>
+        <h4>Kısa Vade (24-48 saat)</h4>
+        <ol start="4">
+            <li>HIGH seviye anahtarları rotate edin</li>
+            <li>Secret management çözümü implemente edin</li>
+            <li>GitHub/GitLab'da secret scanning aktif edin</li>
+        </ol>
+        <h4>Orta Vade (1-2 hafta)</h4>
+        <ol start="7">
+            <li>CI/CD pipeline'a pre-commit hook ekleyin (gitleaks, truffleHog)</li>
+            <li>.env dosyalarının .gitignore'a eklendiğini doğrulayın</li>
+            <li>API key rotation politikası belirleyin</li>
+        </ol>
+    </div>
+</div>
+
+<footer>
+    SiberEmare API Leak Scanner | Emare Ekosistemi | 2026-03-05 21:29 UTC
+</footer>
+
+</body>
+</html>
