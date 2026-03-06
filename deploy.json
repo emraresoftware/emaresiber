@@ -1,0 +1,22 @@
+{
+  "slug": "Emaresiber",
+  "name": "Emare Siber",
+  "github_repo": "emraresoftware/emaresiber",
+  "branch": "main",
+  "dc": "local",
+  "server_host": null,
+  "server_ssh_port": 22,
+  "remote_path": "/opt/emaresiber",
+  "stack": "python-gunicorn",
+  "port": 8303,
+  "domain": "",
+  "deploy_commands": [
+    "cd /opt/emaresiber",
+    "git pull origin main",
+    "source venv/bin/activate && pip install -r requirements.txt -q",
+    "sudo systemctl restart Emaresiber"
+  ],
+  "restart_command": "systemctl status Emaresiber --no-pager",
+  "auto_deploy_on_push": false,
+  "health_check_url": null
+}
