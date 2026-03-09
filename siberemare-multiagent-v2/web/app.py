@@ -29,6 +29,7 @@ from tools.leak_report_generator import (
 )
 from tools.enhanced_osint import run_enhanced_osint
 from tools.active_scanner import ActiveScanner
+from tools.ai_analysis import AIAnalysisEngine
 
 import structlog
 logger = structlog.get_logger()
@@ -39,8 +40,8 @@ logger = structlog.get_logger()
 
 app = FastAPI(
     title="SiberEmare API Leak Scanner",
-    description="Internet ortamında deşifre olmuş API anahtarlarını tarar ve raporlar",
-    version="3.0.0",
+    description="Internet ortamında deşifre olmuş API anahtarlarını tarar ve raporlar — AI Destekli",
+    version="4.0.0",
 )
 
 app.add_middleware(
@@ -154,7 +155,28 @@ async def run_scan_task(scan_id: str, req: ScanRequest):
         store["progress"] = 95
 
         # ============================================================
-        # 5. Store güncelle
+        # 5. AI Destekli Derin Analiz
+        # ============================================================
+        store["progress_text"] = "🤖 AI analiz motoru çalışıyor..."
+        store["progress"] = 95
+        try:
+            ai_engine = AIAnalysisEngine()
+            creds_dicts = [c.to_dict() for c in result.credentials]
+            active_dicts = [f.to_dict() for f in active_findings]
+            ai_result = await ai_engine.analyze(
+                target=req.target,
+                credentials=creds_dicts,
+                active_findings=active_dicts,
+                osint_data=osint_data,
+            )
+            store["ai_analysis"] = ai_result.to_dict()
+            logger.info("ai_analysis_done", target=req.target, provider=ai_result.provider_used)
+        except Exception as ai_err:
+            logger.warning("ai_analysis_error", error=str(ai_err))
+            store["ai_analysis"] = {"error": str(ai_err), "executive_summary": "AI analizi çalıştırılamadı."}
+
+        # ============================================================
+        # 6. Store güncelle
         # ============================================================
         store["status"] = "completed"
         store["progress"] = 100
@@ -253,6 +275,59 @@ async def get_report(filename: str):
     return FileResponse(filepath, filename=filename)
 
 
+@app.get("/api/ai-analysis/{scan_id}")
+async def get_ai_analysis(scan_id: str):
+    """AI analiz sonuçlarını döner."""
+    if scan_id not in scan_store:
+        raise HTTPException(status_code=404, detail="Tarama bulunamadı")
+    return scan_store[scan_id].get("ai_analysis", {"error": "AI analizi henüz tamamlanmadı"})
+
+
+@app.post("/api/ai-reanalyze/{scan_id}")
+async def reanalyze_with_ai(scan_id: str):
+    """Mevcut tarama sonuçlarını tekrar AI ile analiz eder."""
+    if scan_id not in scan_store:
+        raise HTTPException(status_code=404, detail="Tarama bulunamadı")
+    store = scan_store[scan_id]
+    if store.get("status") != "completed":
+        raise HTTPException(status_code=400, detail="Tarama henüz tamamlanmadı")
+    
+    ai_engine = AIAnalysisEngine()
+    ai_result = await ai_engine.analyze(
+        target=store["target"],
+        credentials=store.get("credentials", []),
+        active_findings=store.get("active_findings", []),
+        osint_data=store.get("osint", {}),
+    )
+    store["ai_analysis"] = ai_result.to_dict()
+    return ai_result.to_dict()
+
+
+@app.get("/api/llm-status")
+async def llm_status():
+    """LLM provider durumlarını döner."""
+    providers = {
+        "anthropic": {"name": "Anthropic Claude 3.5", "configured": bool(os.getenv("ANTHROPIC_API_KEY", "") and not os.getenv("ANTHROPIC_API_KEY", "").startswith("sk-ant-...")), "mode": "cloud"},
+        "openai": {"name": "OpenAI GPT-4o", "configured": bool(os.getenv("OPENAI_API_KEY", "") and not os.getenv("OPENAI_API_KEY", "").startswith("sk-...")), "mode": "cloud"},
+        "groq": {"name": "Groq Llama 3.3 70B", "configured": bool(os.getenv("GROQ_API_KEY", "")), "mode": "hybrid"},
+        "ollama": {"name": "Ollama (Lokal)", "configured": False, "mode": "onprem", "url": os.getenv("OLLAMA_URL", "http://localhost:11434")},
+    }
+    # Ollama check
+    try:
+        import aiohttp
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=3)) as session:
+            async with session.get(f"{providers['ollama']['url']}/api/tags") as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    providers['ollama']['configured'] = True
+                    providers['ollama']['models'] = [m['name'] for m in data.get('models', [])]
+    except Exception:
+        pass
+    
+    current_mode = os.getenv("LLM_MODE", "cloud")
+    return {"providers": providers, "current_mode": current_mode}
+
+
 @app.get("/api/patterns")
 async def get_patterns():
     """Desteklenen credential pattern'lerini listeler."""
@@ -307,7 +382,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiberEmare — API Leak Scanner v3.0</title>
+<title>SiberEmare — API Leak Scanner v4.0 — AI Destekli</title>
 <style>
 :root{--bg:#0a0e17;--card:#131a2b;--card2:#1a2744;--accent:#00d4ff;--accent2:#7c3aed;
 --danger:#ef4444;--warning:#f59e0b;--success:#22c55e;--text:#e8e8e8;--muted:#8892a0;
@@ -476,6 +551,7 @@ background:var(--card2);border-radius:8px;margin-bottom:8px;cursor:pointer;trans
     <div class="tab active" onclick="switchTab('active')">🎯 Aktif Tarama</div>
     <div class="tab" onclick="switchTab('findings')">🔍 Credential'lar</div>
     <div class="tab" onclick="switchTab('osint')">🌐 OSINT</div>
+    <div class="tab" onclick="switchTab('ai')">🤖 AI Analiz</div>
     <div class="tab" onclick="switchTab('reports')">📄 Raporlar</div>
     <div class="tab" onclick="switchTab('history')">📜 Geçmiş</div>
 </div>
@@ -537,6 +613,59 @@ background:var(--card2);border-radius:8px;margin-bottom:8px;cursor:pointer;trans
         <h2>📄 Oluşturulan Raporlar</h2>
         <div class="report-links" id="reportLinks">
             <div class="empty" style="width:100%"><p>Tarama tamamlandıktan sonra raporlar burada görünecek.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Analysis Tab -->
+<div class="tab-content" id="tab-ai">
+    <div class="results-section">
+        <h2>🤖 AI Destekli Derin Analiz</h2>
+        <div id="aiStatusBar" style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:12px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:8px">
+            <div id="aiProviderBadge" style="padding:4px 12px;border-radius:12px;font-size:12px;background:rgba(0,212,255,0.15);color:var(--accent)">Provider: Bekleniyor</div>
+            <div id="aiDuration" style="font-size:12px;color:var(--muted)"></div>
+            <button id="reanalyzeBtn" onclick="reanalyzeAI()" style="margin-left:auto;padding:6px 16px;border:1px solid var(--accent2);background:transparent;color:var(--accent2);border-radius:6px;cursor:pointer;font-size:12px;display:none">🔄 Tekrar Analiz Et</button>
+        </div>
+        
+        <!-- Risk Score Card -->
+        <div id="aiRiskCard" style="display:none;margin-bottom:24px;padding:24px;background:linear-gradient(135deg,#131a2b,#1a2744);border-radius:12px;border:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:20px">
+                <div id="aiRiskGauge" style="width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;border:4px solid var(--danger)">0</div>
+                <div>
+                    <h3 id="aiRiskCategory" style="margin-bottom:4px">Risk Kategorisi</h3>
+                    <p id="aiRiskBreakdown" style="font-size:13px;color:var(--muted)"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Attack Chains -->
+        <div id="aiAttackChains" style="display:none;margin-bottom:24px">
+            <h3 style="margin-bottom:12px;color:var(--danger)">⚔️ Tespit Edilen Saldırı Zincirleri</h3>
+            <div id="aiChainsGrid" style="display:grid;gap:12px"></div>
+        </div>
+        
+        <!-- Executive Summary -->
+        <div id="aiSummary" style="display:none;margin-bottom:24px">
+            <h3 style="margin-bottom:12px;color:var(--accent)">📊 Yönetici Özeti (AI)</h3>
+            <div id="aiSummaryContent" style="padding:20px;background:var(--card2);border-radius:8px;font-size:14px;line-height:1.8;white-space:pre-wrap;max-height:600px;overflow-y:auto"></div>
+        </div>
+        
+        <!-- Remediation Plan -->
+        <div id="aiRemediation" style="display:none;margin-bottom:24px">
+            <h3 style="margin-bottom:12px;color:var(--success)">🛠️ Detaylı Remediation Planı</h3>
+            <div id="aiRemediationContent" style="display:grid;gap:10px"></div>
+        </div>
+        
+        <!-- KVKK/GDPR -->
+        <div id="aiKvkk" style="display:none;margin-bottom:24px">
+            <h3 style="margin-bottom:12px;color:var(--warning)">⚖️ KVKK / GDPR Değerlendirmesi</h3>
+            <div id="aiKvkkContent" style="padding:20px;background:var(--card2);border-radius:8px;font-size:14px;line-height:1.6"></div>
+        </div>
+        
+        <div class="empty" id="emptyAI">
+            <div class="icon">🤖</div>
+            <p>Tarama tamamlandığında AI analizi otomatik çalışacak.<br>
+            <small style="color:var(--accent2)">Anthropic Claude / Ollama / Groq / OpenAI ile derin güvenlik analizi</small></p>
         </div>
     </div>
 </div>
@@ -748,6 +877,9 @@ function showResults(data) {
         if (data.reports.json) reportLinks.innerHTML += `<a class="report-link" href="/api/report/${data.reports.json}" target="_blank">📊 JSON Rapor</a>`;
     }
 
+    // === AI Analysis ===
+    if (data.ai_analysis) showAIAnalysis(data.ai_analysis);
+
     // History
     loadHistory();
 }
@@ -785,6 +917,171 @@ async function loadHistory() {
 
 // Enter key
 document.getElementById('targetInput').addEventListener('keypress', e => { if(e.key==='Enter') startScan(); });
+
+// ============================================================
+// AI Analysis UI Functions
+// ============================================================
+function showAIAnalysis(ai) {
+    if (!ai || ai.error) {
+        document.getElementById('emptyAI').innerHTML = '<div class="icon">⚠️</div><p>AI analizi çalıştırılamadı: ' + (ai?.error || 'Bilinmeyen hata') + '</p>';
+        return;
+    }
+    document.getElementById('emptyAI').style.display = 'none';
+    document.getElementById('reanalyzeBtn').style.display = 'inline-block';
+    
+    // Provider info
+    document.getElementById('aiProviderBadge').textContent = 'Provider: ' + (ai.provider_used || 'rule_engine');
+    document.getElementById('aiDuration').textContent = ai.analysis_duration_seconds ? 'Süre: ' + ai.analysis_duration_seconds.toFixed(1) + 's | LLM Çağrısı: ' + (ai.llm_calls_made || 0) : '';
+    
+    // Risk Score
+    if (ai.risk_assessment) {
+        document.getElementById('aiRiskCard').style.display = 'block';
+        const risk = ai.risk_assessment;
+        const score = risk.overall_risk_score || 0;
+        const gauge = document.getElementById('aiRiskGauge');
+        gauge.textContent = score;
+        gauge.style.borderColor = score >= 80 ? '#ef4444' : score >= 60 ? '#f59e0b' : score >= 40 ? '#fb923c' : '#22c55e';
+        gauge.style.color = gauge.style.borderColor;
+        document.getElementById('aiRiskCategory').textContent = risk.risk_category || 'N/A';
+        
+        let breakdown = '';
+        if (risk.risk_breakdown) {
+            const rb = risk.risk_breakdown;
+            if (rb.critical_findings !== undefined) {
+                breakdown = 'Kritik: ' + (rb.critical_findings||0) + ' | Yüksek: ' + (rb.high_findings||0) + ' | Orta: ' + (rb.medium_findings||0) + ' | Düşük: ' + (rb.low_findings||0);
+            } else if (rb.confidentiality !== undefined) {
+                breakdown = 'Gizlilik: ' + rb.confidentiality + '/10 | Bütünlük: ' + rb.integrity + '/10 | Erişilebilirlik: ' + rb.availability + '/10';
+            }
+        }
+        if (risk.findings_scored) {
+            breakdown += ' | CVSS Skorlanmış: ' + risk.findings_scored.length + ' bulgu';
+        }
+        document.getElementById('aiRiskBreakdown').textContent = breakdown;
+    }
+    
+    // Attack Chains
+    const chains = ai.attack_chains?.attack_chains || ai.attack_chains?.chains || [];
+    if (chains.length > 0) {
+        document.getElementById('aiAttackChains').style.display = 'block';
+        const grid = document.getElementById('aiChainsGrid');
+        grid.innerHTML = '';
+        chains.forEach((chain, i) => {
+            const sevColor = chain.severity === 'CRITICAL' ? '#ef4444' : chain.severity === 'HIGH' ? '#f59e0b' : '#fb923c';
+            const card = document.createElement('div');
+            card.style.cssText = 'padding:16px;background:var(--card2);border-radius:8px;border-left:4px solid ' + sevColor;
+            let html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+            html += '<h4 style="color:' + sevColor + '">' + (i+1) + '. ' + chain.name + '</h4>';
+            html += '<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.05)">' + chain.severity + '</span></div>';
+            
+            if (chain.steps) {
+                html += '<div style="font-size:13px;margin-bottom:8px">';
+                chain.steps.forEach(step => { html += '<div style="padding:2px 0;color:var(--muted)">→ ' + step + '</div>'; });
+                html += '</div>';
+            }
+            
+            if (chain.success_probability) html += '<span style="font-size:12px;color:var(--muted)">Başarı: <b>' + chain.success_probability + '</b></span> ';
+            if (chain.potential_damage) html += '<span style="font-size:12px;color:var(--danger)"> | Hasar: ' + chain.potential_damage + '</span>';
+            
+            card.innerHTML = html;
+            grid.appendChild(card);
+        });
+    }
+    
+    // Executive Summary
+    if (ai.executive_summary) {
+        document.getElementById('aiSummary').style.display = 'block';
+        let summaryHtml = ai.executive_summary
+            .replace(/^### (.+)$/gm, '<h4 style="color:var(--accent);margin-top:16px">$1</h4>')
+            .replace(/^## (.+)$/gm, '<h3 style="color:var(--accent);margin-top:20px;padding-bottom:4px;border-bottom:1px solid var(--border)">$1</h3>')
+            .replace(/^# (.+)$/gm, '<h2 style="color:var(--accent);margin-bottom:8px">$1</h2>')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+        document.getElementById('aiSummaryContent').innerHTML = summaryHtml;
+    }
+    
+    // Remediation
+    const rems = ai.remediation_plan?.remediations || [];
+    if (rems.length > 0) {
+        document.getElementById('aiRemediation').style.display = 'block';
+        const container = document.getElementById('aiRemediationContent');
+        container.innerHTML = '';
+        rems.forEach((r, i) => {
+            const card = document.createElement('div');
+            const sevColor = r.severity === 'CRITICAL' ? '#ef4444' : r.severity === 'HIGH' ? '#f59e0b' : '#fb923c';
+            card.style.cssText = 'padding:14px;background:var(--card2);border-radius:8px;border-left:3px solid ' + sevColor;
+            let html = '<div style="display:flex;gap:12px;align-items:baseline;margin-bottom:6px">';
+            html += '<span style="color:' + sevColor + ';font-weight:bold">#' + (r.priority || i+1) + '</span>';
+            html += '<strong>' + r.finding + '</strong>';
+            html += '<span class="badge ' + r.severity + '" style="font-size:10px">' + r.severity + '</span></div>';
+            
+            const imm = typeof r.immediate === 'object' ? r.immediate.action : r.immediate;
+            const st = typeof r.short_term === 'object' ? r.short_term.action : r.short_term;
+            const mt = typeof r.medium_term === 'object' ? r.medium_term.action : r.medium_term;
+            
+            if (imm) html += '<div style="font-size:12px;margin:4px 0"><span style="color:#ef4444">⚡Acil:</span> ' + imm + '</div>';
+            if (st) html += '<div style="font-size:12px;margin:4px 0"><span style="color:#f59e0b">📅Kısa Vade:</span> ' + st + '</div>';
+            if (mt) html += '<div style="font-size:12px;margin:4px 0"><span style="color:#22c55e">🔄Orta Vade:</span> ' + mt + '</div>';
+            
+            card.innerHTML = html;
+            container.appendChild(card);
+        });
+    }
+    
+    // KVKK/GDPR
+    if (ai.kvkk_gdpr && ai.kvkk_gdpr.kvkk_assessment) {
+        document.getElementById('aiKvkk').style.display = 'block';
+        const kvkk = ai.kvkk_gdpr;
+        const ka = kvkk.kvkk_assessment;
+        let html = '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px">';
+        
+        const riskColor = kvkk.risk_to_individuals === 'CRITICAL' ? '#ef4444' : kvkk.risk_to_individuals === 'HIGH' ? '#f59e0b' : kvkk.risk_to_individuals === 'MEDIUM' ? '#fb923c' : '#22c55e';
+        html += '<div style="padding:8px 16px;background:rgba(255,255,255,0.03);border-radius:6px"><small style="color:var(--muted)">Bireysel Risk</small><br><b style="color:' + riskColor + '">' + (kvkk.risk_to_individuals || 'N/A') + '</b></div>';
+        html += '<div style="padding:8px 16px;background:rgba(255,255,255,0.03);border-radius:6px"><small style="color:var(--muted)">KVKK Bildirim</small><br><b style="color:' + (ka.breach_notification_required ? '#ef4444' : '#22c55e') + '">' + (ka.breach_notification_required ? 'GEREKLİ' : 'Gerekli Değil') + '</b></div>';
+        
+        if (kvkk.gdpr_assessment) {
+            const ga = kvkk.gdpr_assessment;
+            html += '<div style="padding:8px 16px;background:rgba(255,255,255,0.03);border-radius:6px"><small style="color:var(--muted)">GDPR Art.33</small><br><b style="color:' + (ga.article_33_triggered ? '#ef4444' : '#22c55e') + '">' + (ga.article_33_triggered ? 'TETİKLENDİ' : 'Hayır') + '</b></div>';
+        }
+        html += '</div>';
+        
+        if (ka.data_categories) html += '<p style="font-size:13px;margin:8px 0">Veri Kategorileri: <b>' + ka.data_categories.join(', ') + '</b></p>';
+        if (ka.recommended_actions) {
+            html += '<div style="margin-top:8px"><p style="font-size:12px;color:var(--muted);margin-bottom:4px">Önerilen Aksiyonlar:</p>';
+            ka.recommended_actions.forEach(a => { html += '<div style="font-size:13px;padding:2px 0">→ ' + a + '</div>'; });
+            html += '</div>';
+        }
+        
+        document.getElementById('aiKvkkContent').innerHTML = html;
+    }
+}
+
+async function reanalyzeAI() {
+    if (!currentScanId) return;
+    const btn = document.getElementById('reanalyzeBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Analiz ediliyor...';
+    try {
+        const resp = await fetch('/api/ai-reanalyze/' + currentScanId, { method: 'POST' });
+        const data = await resp.json();
+        showAIAnalysis(data);
+        btn.textContent = '✅ Tamamlandı';
+        setTimeout(() => { btn.textContent = '🔄 Tekrar Analiz Et'; btn.disabled = false; }, 2000);
+    } catch(e) {
+        btn.textContent = '❌ Hata';
+        btn.disabled = false;
+    }
+}
+
+// LLM Status check on load
+async function checkLLMStatus() {
+    try {
+        const resp = await fetch('/api/llm-status');
+        const data = await resp.json();
+        console.log('LLM Status:', data);
+    } catch(e) {}
+}
+checkLLMStatus();
+
 // Load history on start
 loadHistory();
 </script>
